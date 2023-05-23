@@ -99,7 +99,7 @@ def creartablas():
     cur.close()
     
 
-# creartablas()
+creartablas()
 # conexion.close()
 def insetarvalor():
     cur = conexion.cursor()
@@ -224,12 +224,4 @@ def insetarvalor():
     cur.execute(InsertarEquipamientoPersonaje3)
     cur.close()
 
-nombre = "Ejemplo"
-Correo = "CorreoFalso@hotmail.com"
-
-cur = conexion.cursor()
-query = f"SELECT * from usuario WHERE nombre = '{nombre}' or correo = '{Correo}'"
-cur.execute(query)
-datos = cur.fetchall()
-print(bool(datos))
 # insetarvalor()

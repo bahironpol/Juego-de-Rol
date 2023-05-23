@@ -9,18 +9,18 @@ Accion = int(input("""
                """))
 
 if Accion == 1:
-    nombre = input("Ingrese su nombre de usuario: ")
+    Nombre = input("Ingrese su nombre de usuario: ")
     Contraseña = input("Ingrese su contraseña: ")
-    while nombre == '' or Contraseña == '':
+    while Nombre == '' or Contraseña == '':
         print("No deje campos vacios")
-        nombre = input("Ingrese su nombre de usuario: ")
+        Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
     
-    UsuarioExistente = Persona.Login(f'{nombre}', f'{Contraseña}')
+    UsuarioExistente = Persona.Login(f'{Nombre}', f'{Contraseña}')
     
     while UsuarioExistente != True:
         print("Las credenciales proveidas no son validas")
-        nombre = input("Ingrese su nombre de usuario: ")
+        Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
     else:
         print("Bienvenido al sistema")

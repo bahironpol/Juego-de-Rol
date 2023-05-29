@@ -54,6 +54,7 @@ def creartablas():
     CREATE TABLE personaje
     (id serial not null PRIMARY KEY,
     nombre varchar(50),
+    nivel integer,
     fk_id_raza integer REFERENCES raza(id),
     fk_id_usuario integer REFERENCES usuario(id),
     fk_id_estado integer REFERENCES estado(id)
@@ -86,6 +87,22 @@ def creartablas():
     fk_id_personaje integer REFERENCES personaje(id)
     )
     '''
+    
+    TablaHabilidad_Personaje = f'''
+    CREATE TABLE Habilidad_Personaje
+    (id serial not null PRIMARY KEY,
+    fk_id_habilidad integer REFERENCES Habilidad(id),
+    fk_id_personaje integer REFERENCES personaje(id)
+    )
+    '''
+    
+    TablaPoder_Personaje = f'''
+    CREATE TABLE Poder_Personaje
+    (id serial not null PRIMARY KEY,
+    fk_id_poder integer REFERENCES Poder(id),
+    fk_id_personaje integer REFERENCES personaje(id)
+    )
+    '''
     cur.execute(TablaUsuario)
     cur.execute(TablaEstado)
     cur.execute(TablaRaza)
@@ -96,11 +113,11 @@ def creartablas():
     cur.execute(TablaPersonaje_Partida)
     cur.execute(TablaEquipamiento)
     cur.execute(TablaEquipamiento_Personaje)
+    cur.execute(TablaHabilidad_Personaje)
+    cur.execute(TablaPoder_Personaje)
     cur.close()
     
 
-# creartablas()
-# conexion.close()
 def insetarvalor():
     cur = conexion.cursor()
     InsertarJugador = f"""
@@ -153,16 +170,20 @@ def insetarvalor():
     values ('Empuje', 'Permite empujar a un objetivo cierto numero de casillas dependiendo de la fuerza del usuario', 2)
     """
     InsertarPersonaje1 = f"""
-    INSERT INTO personaje (nombre, fk_id_raza, fk_id_usuario, fk_id_estado) 
-    values ('klin', 1, 1, 2)
+    INSERT INTO personaje (nombre, nivel, fk_id_raza, fk_id_usuario, fk_id_estado) 
+    values ('klin', 1, 1, 1, 2)
     """
     InsertarPersonaje2 = f"""
-    INSERT INTO personaje (nombre, fk_id_raza, fk_id_usuario, fk_id_estado) 
-    values ('Thurm', 2, 1, 1)
+    INSERT INTO personaje (nombre, nivel, fk_id_raza, fk_id_usuario, fk_id_estado) 
+    values ('Thurm',1, 2, 1, 1)
     """
     InsertarPartida1 = f"""
     INSERT INTO partida (nombre) 
-    values ('La leyenda de los 7 reinos')
+    values ('Aguas profundas')
+    """
+    InsertarPartida2 = f"""
+    INSERT INTO partida (nombre) 
+    values ('La ultima ascua ')
     """
     
     InsertarPersonajePartida1 = f"""
@@ -197,6 +218,14 @@ def insetarvalor():
     INSERT INTO equipamiento_personaje (fk_id_equipamiento, fk_id_personaje)
     values (1,1)
     """
+    InsertarHabilidad_Personaje1 = f"""
+    INSERT INTO habilidad_personaje (fk_id_habilidad, fk_id_personaje)
+    values (1,1)
+    """
+    InsertarPoder_Personaje1 = f"""
+    INSERT INTO poder_personaje (fk_id_poder, fk_id_personaje)
+    values (1,2)
+    """
     
     cur.execute(InsertarJugador)
     cur.execute(InsertarEstado1)
@@ -214,6 +243,7 @@ def insetarvalor():
     cur.execute(InsertarPersonaje1)
     cur.execute(InsertarPersonaje2)
     cur.execute(InsertarPartida1)
+    cur.execute(InsertarPartida2)
     cur.execute(InsertarPersonajePartida1)
     cur.execute(InsertarPersonajePartida2)
     cur.execute(InsertarEquipamiento1)
@@ -224,12 +254,7 @@ def insetarvalor():
     cur.execute(InsertarEquipamientoPersonaje3)
     cur.close()
 
-nombre = "Ejemplo"
-Correo = "CorreoFalso@hotmail.com"
 
-cur = conexion.cursor()
-query = f"SELECT * from usuario WHERE nombre = '{nombre}' or correo = '{Correo}'"
-cur.execute(query)
-datos = cur.fetchall()
-print(bool(datos))
+# creartablas()
 # insetarvalor()
+# conexion.close()

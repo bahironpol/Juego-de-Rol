@@ -1,6 +1,4 @@
-from Clases import usuario
-
-Persona = usuario()
+from Clases import Login, Registrarse, ValidarCorreo, ValidarExistencia, GameMaster, Jugador
 
 print("Bienvenido al sistema ¿Qué acción desea realizar?")
 Accion = int(input("""
@@ -9,22 +7,35 @@ Accion = int(input("""
                """))
 
 if Accion == 1:
+    print("Bienvenido a la pantalla de ingreso de usuarios por favor ingrese los datos que le solicitaremos ")
     nombre = input("Ingrese su nombre de usuario: ")
     Contraseña = input("Ingrese su contraseña: ")
     while nombre == '' or Contraseña == '':
         print("No deje campos vacios")
         nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
+        
+    UsuarioExistente = Login(f'{nombre}', f'{Contraseña}')
     
-    UsuarioExistente = Persona.Login(f'{nombre}', f'{Contraseña}')
-    
-    while UsuarioExistente != True:
+    while UsuarioExistente == False:
         print("Las credenciales proveidas no son validas")
         nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
+        UsuarioExistente = Login(f'{nombre}', f'{Contraseña}')
     else:
         print("Bienvenido al sistema")
         
+    match UsuarioExistente[1][4]:
+        case "jugador":
+            jugador = Jugador(UsuarioExistente[1][0], UsuarioExistente[1][1], UsuarioExistente[1][4])
+            print(f"Bienvenido {jugador.nombre} ({jugador.rol})")
+            
+            
+        case "game master":
+            gamemaster = GameMaster(UsuarioExistente[1][1], UsuarioExistente[1][4])
+            print(f"Bienvenido {gamemaster.nombre} ({gamemaster.rol})")
+            
+            
 
 elif Accion == 2:
     print("Bienvenido a la pantalla de registro de usuarios por favor ingrese los datos que le solicitaremos ")
@@ -43,14 +54,11 @@ elif Accion == 2:
     elif Opcion == 2:
         Rol = "game master"
     
-    while Persona.ValidarCorreo(Correo) != True:
+    while ValidarCorreo(Correo) != True:
         Correo = input("El correo ingresado no es valido \n Por favor reingrese su correo")
-        Persona.correo = Correo
 
-    while Persona.ValidarExistencia(Nombre, Correo) != True:
+    while ValidarExistencia(Nombre, Correo) != True:
         Nombre = input("Reingrese su nombre ")
-        Persona.nombre = Nombre
         Correo = input("Reingrese su Correo ")
-        Persona.correo = Correo
-    Persona.Registrarse(Nombre, Correo, Contraseña, Rol)
+    Registrarse(Nombre, Correo, Contraseña, Rol)
     print("Se ha registrado exitosamente")

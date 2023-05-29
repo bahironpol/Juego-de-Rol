@@ -10,16 +10,16 @@ if Accion == 1:
     print("Bienvenido a la pantalla de ingreso de usuarios por favor ingrese los datos que le solicitaremos ")
     nombre = input("Ingrese su nombre de usuario: ")
     Contraseña = input("Ingrese su contraseña: ")
-    while nombre == '' or Contraseña == '':
+    while Nombre == '' or Contraseña == '':
         print("No deje campos vacios")
-        nombre = input("Ingrese su nombre de usuario: ")
+        Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
         
     UsuarioExistente = Login(f'{nombre}', f'{Contraseña}')
     
     while UsuarioExistente == False:
         print("Las credenciales proveidas no son validas")
-        nombre = input("Ingrese su nombre de usuario: ")
+        Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
         UsuarioExistente = Login(f'{nombre}', f'{Contraseña}')
     else:

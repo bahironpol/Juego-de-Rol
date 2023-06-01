@@ -54,6 +54,13 @@ elif Accion == 2:
     elif Opcion == 2:
         Rol = "game master"
     
+    while Nombre == '' or Correo == '' or Contraseña == '':
+        print("No deje campos vacios")
+        Nombre = input("Ingrese su nombre de usuario: ")
+        Correo = input("Ingrese su correo: ")
+        Contraseña = input("Ingrese su contraseña: ")
+        
+        
     while ValidarCorreo(Correo) != True:
         Correo = input("El correo ingresado no es valido \n Por favor reingrese su correo")
 

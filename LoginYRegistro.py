@@ -1,27 +1,29 @@
-from Clases import Login, Registrarse, ValidarCorreo, ValidarExistencia, GameMaster, Jugador
+from Clases import Login, Registrarse,ValidarNombre, ValidarContraseña, ValidarCorreo, ValidarExistencia, GameMaster, Jugador
 
 print("Bienvenido al sistema ¿Qué acción desea realizar?")
-Accion = int(input("""
+Accion = input("""
                1.- Logearse
                2.- Registrarse
-               """))
+               """)
 
-if Accion == 1:
+while Accion not in ['1', '2']:
+    Accion = input("La opción es invalida por favor ingrese un opcion valida ")
+if Accion == '1':
     print("Bienvenido a la pantalla de ingreso de usuarios por favor ingrese los datos que le solicitaremos ")
-    nombre = input("Ingrese su nombre de usuario: ")
+    Nombre = input("Ingrese su nombre de usuario: ")
     Contraseña = input("Ingrese su contraseña: ")
     while Nombre == '' or Contraseña == '':
         print("No deje campos vacios")
         Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
         
-    UsuarioExistente = Login(f'{nombre}', f'{Contraseña}')
+    UsuarioExistente = Login(f'{Nombre}', f'{Contraseña}')
     
     while UsuarioExistente == False:
         print("Las credenciales proveidas no son validas")
         Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
-        UsuarioExistente = Login(f'{nombre}', f'{Contraseña}')
+        UsuarioExistente = Login(f'{Nombre}', f'{Contraseña}')
     else:
         print("Bienvenido al sistema")
         
@@ -35,37 +37,39 @@ if Accion == 1:
             gamemaster = GameMaster(UsuarioExistente[1][1], UsuarioExistente[1][4])
             print(f"Bienvenido {gamemaster.nombre} ({gamemaster.rol})")
             
-            
-
-elif Accion == 2:
+elif Accion == '2':
     print("Bienvenido a la pantalla de registro de usuarios por favor ingrese los datos que le solicitaremos ")
     Nombre = input("Ingrese su nombre de usuario: ")
     Correo = input("Ingrese su correo: ")
     Contraseña = input("Ingrese su contraseña: ")
-    Rol = ''
-    Opcion = int(input(f"""
-                ¿Con cual de los siguientes roles se desea registrar?
-                1.- Game Master
-                2.- Jugador
-                """))
+    while True:
+        while ValidarNombre(Nombre) != True:
+            Nombre = input("El nombre ingresado no es valido \nPor favor reingrese su nombre: ")
+            
+        while ValidarCorreo(Correo) != True:
+            Correo = input("El correo ingresado no es valido \nPor favor reingrese su correo: ")
+        
+        while ValidarContraseña(Contraseña) != True:
+            Contraseña = input("La contraseña ingresada no es valida \nPor favor reingrese su contraseña: ")
 
-    if Opcion == 1:
-        Rol = "jugador"
-    elif Opcion == 2:
-        Rol = "game master"
+        while ValidarExistencia(Nombre, Correo) != True:
+            print("Estas credenciales ya se encuentran en uso por favor utilice otras")
+            Nombre = input("Reingrese su nombre ")
+            Correo = input("Reingrese su Correo ")
+        break
     
-    while Nombre == '' or Correo == '' or Contraseña == '':
-        print("No deje campos vacios")
-        Nombre = input("Ingrese su nombre de usuario: ")
-        Correo = input("Ingrese su correo: ")
-        Contraseña = input("Ingrese su contraseña: ")
-        
-        
-    while ValidarCorreo(Correo) != True:
-        Correo = input("El correo ingresado no es valido \n Por favor reingrese su correo")
+    Rol = ''
+    Opcion = input(f"""
+            ¿Con cual de los siguientes roles se desea registrar?
+            1.- Jugador
+            2.- Game Master
+            """)
+    while Opcion not in ['1','2']:
+        Opcion = input("La opción ingresada no es valida por favor seleccione nuevamente ")
+    if Opcion == '1':
+        Rol = "jugador"
+    elif Opcion == '2':
+        Rol = "game master"
 
-    while ValidarExistencia(Nombre, Correo) != True:
-        Nombre = input("Reingrese su nombre ")
-        Correo = input("Reingrese su Correo ")
     Registrarse(Nombre, Correo, Contraseña, Rol)
     print("Se ha registrado exitosamente")

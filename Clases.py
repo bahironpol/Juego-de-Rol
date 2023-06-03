@@ -13,9 +13,30 @@ def Login(nombre, contraseña):
         return existe, datos
     return existe
 
+def Registrarse(nombre, correo, contraseña, rol):       
+    cursor = conexion.cursor() 
+    InsertarUsuario = f"""
+    INSERT INTO usuario (nombre, correo, contraseña, rol) values
+    ('{nombre}', '{correo}','{contraseña}', '{rol}')"""
+    cursor.execute(InsertarUsuario)
+
+def ValidarNombre(Nombre):
+    LongitudNombre = len(Nombre)
+    BuscadorCaracteres = r"[^A-Za-záéíóúñÁÉÍÓÚÑ\s]"
+    CaracterInvalido = re.findall(BuscadorCaracteres, Nombre)
+    if LongitudNombre <=0 or CaracterInvalido:
+        return False
+    return True
+    
 def ValidarCorreo(Correo):
     valido = re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', Correo)
-    if not (valido):
+    if not (valido) or  Correo == '':
+        return False
+    return True
+
+def ValidarContraseña(Contraseña):
+    LogintudPassword = len(Contraseña)
+    if LogintudPassword < 8:
         return False
     return True
         
@@ -26,16 +47,8 @@ def ValidarExistencia(Nombre, Correo):
     datos = cursor.fetchall()
     existe = bool(datos)
     if existe:
-        print("El nombre de usuario o correo ya se encuentran en uso por favor ingrese otros datos")
         return False
     return True
-        
-def Registrarse(nombre, correo, contraseña, rol):       
-    cursor = conexion.cursor() 
-    InsertarUsuario = f"""
-    INSERT INTO usuario (nombre, correo, contraseña, rol) values
-    ('{nombre}', '{correo}','{contraseña}', '{rol}')"""
-    cursor.execute(InsertarUsuario)
 
 class Jugador:
     def __init__(self, id, nombre, rol):
@@ -43,8 +56,7 @@ class Jugador:
         self.id = id
         self.rol = rol
         self.conexion = conexion
-        self.cursor = conexion.cursor()
-        
+        self.cursor = conexion.cursor()       
         
 class GameMaster:
     def __init__(self, nombre, rol):

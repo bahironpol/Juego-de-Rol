@@ -17,7 +17,7 @@ def creartablas():
     (id serial not null PRIMARY KEY, 
     nombre varchar(25),
     correo varchar(50),
-    contraseña varchar(50),
+    contraseña varchar(100),
     rol varchar(20)
     )
     '''

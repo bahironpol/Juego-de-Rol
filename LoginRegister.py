@@ -1,7 +1,5 @@
 import re
-from BD import conexion
-
-conexion.autocommit = True
+from Database import conexion
 
 def Login(nombre, contraseña):
     query = f"SELECT * from usuario WHERE nombre = '{nombre}' AND contraseña = '{contraseña}'"
@@ -9,21 +7,13 @@ def Login(nombre, contraseña):
     cursor.execute(query)
     datos = cursor.fetchone()
     existe = bool(datos)
-    if existe:
-        return existe, datos
-    return existe
-
-def Registrarse(nombre, correo, contraseña, rol):       
-    cursor = conexion.cursor() 
-    InsertarUsuario = f"""
-    INSERT INTO usuario (nombre, correo, contraseña, rol) values
-    ('{nombre}', '{correo}','{contraseña}', '{rol}')"""
-    cursor.execute(InsertarUsuario)
+    return existe, datos
 
 def ValidarNombre(Nombre):
     LongitudNombre = len(Nombre)
     BuscadorCaracteres = r"[^A-Za-záéíóúñÁÉÍÓÚÑ\s]"
     CaracterInvalido = re.findall(BuscadorCaracteres, Nombre)
+    
     if LongitudNombre <=0 or CaracterInvalido:
         return False
     return True
@@ -49,18 +39,10 @@ def ValidarExistencia(Nombre, Correo):
     if existe:
         return False
     return True
-
-class Jugador:
-    def __init__(self, id, nombre, rol):
-        self.nombre = nombre
-        self.id = id
-        self.rol = rol
-        self.conexion = conexion
-        self.cursor = conexion.cursor()       
         
-class GameMaster:
-    def __init__(self, nombre, rol):
-        self.nombre = nombre
-        self.rol = rol
-        self.conexion = conexion
-        self.cursor = conexion.cursor()
+def Registrarse(nombre, correo, contraseña, rol):       
+    cursor = conexion.cursor() 
+    InsertarUsuario = f"""
+    INSERT INTO usuario (nombre, correo, contraseña, rol) values
+    ('{nombre}', '{correo}','{contraseña}', '{rol}')"""
+    cursor.execute(InsertarUsuario)

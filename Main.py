@@ -1,4 +1,6 @@
-from Clases import Login, Registrarse,ValidarNombre, ValidarContraseña, ValidarCorreo, ValidarExistencia, GameMaster, Jugador
+from LoginRegister import Login, Registrarse,ValidarNombre, ValidarContraseña, ValidarCorreo, ValidarExistencia
+from Jugador import Jugador
+from GameMaster import GameMaster
 
 print("Bienvenido al sistema ¿Qué acción desea realizar?")
 Accion = input("""
@@ -16,10 +18,10 @@ if Accion == '1':
         print("No deje campos vacios")
         Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
-        
+    
     UsuarioExistente = Login(f'{Nombre}', f'{Contraseña}')
     
-    while UsuarioExistente == False:
+    while UsuarioExistente[0] == False:
         print("Las credenciales proveidas no son validas")
         Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
@@ -31,11 +33,38 @@ if Accion == '1':
         case "jugador":
             jugador = Jugador(UsuarioExistente[1][0], UsuarioExistente[1][1], UsuarioExistente[1][4])
             print(f"Bienvenido {jugador.nombre} ({jugador.rol})")
-            
-            
+            print("Bienvenido al perfil de Jugador por favor seleccione una de las 4 opciones disponibles")
+            while True:
+                Eleccion = int(input("""
+                                 1.-Crear Personaje: Cree un personaje para jugar
+                                 2.- Ver Personajes: Vea Todos sus personajes
+                                 3.- Asociar Personaje a una partida: Asocie a alguno de sus personajes a una partida
+                                 4.- Reequipar a un personaje: Seleccione uno de sus personajes y cambiele el equipamiento
+                                 """))
+                jugador.MenuOpciones(Eleccion)
+                Seguir = input("¿Desea continuar usando el menu? Si/No: ")
+                if Seguir.lower() == "no":
+                    break
+                print("Seleccione otra opcion")
+            print("Tenga un buen dia")
         case "game master":
             gamemaster = GameMaster(UsuarioExistente[1][1], UsuarioExistente[1][4])
             print(f"Bienvenido {gamemaster.nombre} ({gamemaster.rol})")
+            print("Bienvenido al menu de creacion, Eliminación y modificación de elementos de juego de rol por favor que desea modificar")
+            while True:
+                Eleccion = int(input("""
+                                 1.- Razas: Crear y eliminar razas jugables
+                                 2.- Habilidades: Crear, Modificar o Eliminar Habilidades jugables
+                                 3.- Poderes: Crear, Modificar o Eliminar Poderes jugables
+                                 4.- Estados : Crear, Modificar o Eliminar estados del sistema
+                                 5.- Equipamientos: Cree, Modifique o Elimine equipamientos
+                                 """))
+                gamemaster.MenuCrud(Eleccion)
+                Seguir = input("¿Desea continuar usando el menu? Si/No: ")
+                if Seguir.lower() == "no":
+                    break
+                print("Seleccione otra opcion")
+            print("Tenga un buen dia")
             
 elif Accion == '2':
     print("Bienvenido a la pantalla de registro de usuarios por favor ingrese los datos que le solicitaremos ")

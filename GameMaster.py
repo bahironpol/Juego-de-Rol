@@ -48,9 +48,7 @@ class GameMaster(Usuario):
             self.cursor.execute(Modificacion)
             print("Se han cambiado los valores Exitosamente")
     
-    def crearPartida(self):
-        pass
-        
+
     def EliminarEstado(self):
         ListadoEstados = self.ListarEstado()
         Eleccion = int(input("Seleccione el estado (numero) que desea eliminar: ")) -1
@@ -72,6 +70,10 @@ class GameMaster(Usuario):
             self.cursor.execute(BorrarEstado)
             print("Se ha eliminado el estado exitosamente")
 
+    def crearPartida(self):
+        pass
+        
+
     def AgregarEquipamiento(self):
         Nombre = input("Ingrese el nombre de su nueva arma: ")
         Tipo = ''
@@ -91,33 +93,38 @@ class GameMaster(Usuario):
         
     def EditarEquipamiento(self):
         ListadoEquipamientos = self.ListarEquipamiento()
-        Eleccion = int(input("Seleccione el equipamiento (numero) que desea modificar: ")) -1
-        EquipamientoElegido = ListadoEquipamientos[Eleccion]
-        print(f"Se cambiara el nombre del equipamiento {EquipamientoElegido[0]}")
-        NuevoNombre = input("Ingrese el nuevo nombre del equipamiento: ")
-        Modificacion = f"""UPDATE equipamiento 
-            set nombre = '{NuevoNombre}' 
-            WHERE  id = {EquipamientoElegido[1]}"""
-        self.cursor.execute(Modificacion)
-        print("Se ha cambiado el Nombre Exitosamente")
+        if bool(ListadoEquipamientos):
+            Eleccion = int(input("Seleccione el equipamiento (numero) que desea modificar: ")) -1
+            EquipamientoElegido = ListadoEquipamientos[Eleccion]
+            print(f"Se cambiara el nombre del equipamiento {EquipamientoElegido[0]}")
+            NuevoNombre = input("Ingrese el nuevo nombre del equipamiento: ")
+            Modificacion = f"""UPDATE equipamiento 
+                set nombre = '{NuevoNombre}' 
+                WHERE  id = {EquipamientoElegido[1]}"""
+            self.cursor.execute(Modificacion)
+            print("Se ha cambiado el Nombre Exitosamente")
+        else:
+            return
         
     def EliminarEquipamiento(self):
         ListadoEquipamiento = self.ListarEquipamiento()
-        Eleccion = int(input("Seleccione el equipamiento (numero) que desea eliminar: ")) -1
-        equipamiento = int(ListadoEquipamiento[Eleccion][1])
-        equipamientoeuso = f"""SELECT equipamiento_personaje.fk_id_equipamiento 
-        FROM equipamiento_personaje 
-        WHERE fk_id_equipamiento = {equipamiento}
-        """
-        self.cursor.execute(equipamientoeuso)
-        Seusa = self.cursor.fetchone()
-        if (bool(Seusa)):
-            print("El equipamiento que desea eliminar se encuentra en uso")
-            return
+        if bool(ListadoEquipamiento):           
+            Eleccion = int(input("Seleccione el equipamiento (numero) que desea eliminar: ")) -1
+            equipamiento = int(ListadoEquipamiento[Eleccion][1])
+            equipamientoeuso = f"""SELECT equipamiento_personaje.fk_id_equipamiento 
+            FROM equipamiento_personaje 
+            WHERE fk_id_equipamiento = {equipamiento}
+            """
+            self.cursor.execute(equipamientoeuso)
+            Seusa = self.cursor.fetchone()
+            if (bool(Seusa)):
+                print("El equipamiento que desea eliminar se encuentra en uso")
+            else:
+                BorrarEquipamiento= f"""DELETE FROM equipamiento WHERE id = {equipamiento}"""
+                self.cursor.execute(BorrarEquipamiento)
+                print("Se ha eliminado el equipamiento exitosamente")
         else:
-            BorrarEquipamiento= f"""DELETE FROM equipamiento WHERE id = {equipamiento}"""
-            self.cursor.execute(BorrarEquipamiento)
-            print("Se ha eliminado el equipamiento exitosamente")
+            return
     
     def AgregarPoder(self):
         Nombre = input("Ingrese el nombre del nuevo poder ")
@@ -134,55 +141,61 @@ class GameMaster(Usuario):
     
     def EditarPoder(self):
         ListadoPoder = self.ListarPoderes()
-        Elección = int(input("Seleccione (Numero) que poder desea modificar: ")) - 1
-        PoderElegido = ListadoPoder[Elección]
-        print(f"""Se ha seleccionado el {PoderElegido[0]} de la Raza {PoderElegido[2]} \nla cual posee la siguiente descripción:\n{PoderElegido[1]}""")
-        Modificar = int(input("""¿Qué desea modificar del poder en cuestion
-              1.- Su nombre
-              2.- Su Descripción
-              3.- Ambas
-              """))
-        if Modificar == 1:
-            NuevoNombre = input("Ingrese el nuevo nombre de su poder: ")
-            Modificacion = f"""UPDATE poder 
-            set nombre = '{NuevoNombre}' 
-            WHERE  id = {PoderElegido[3]}"""
-            self.cursor.execute(Modificacion)
-            print("Se ha cambiado el Nombre Exitosamente")
-        elif Modificar == 2:
-            NuevaDescripcion = input("Ingrese la nueva descripcion de su poder: ")
-            Modificacion = f"""UPDATE poder 
-            set descripcion = '{NuevaDescripcion}' 
-            WHERE  id = {PoderElegido[3]}"""
-            self.cursor.execute(Modificacion)
-            print("Se ha cambiado la descripcion Exitosamente")
-        elif Modificar == 3:
-            NuevoNombre = input("Ingrese el nuevo nombre de su poder: ")
-            NuevaDescripcion = input("Ingrese la nueva descripcion de su poder: ")
-            Modificacion = f"""UPDATE poder
-            set nombre = '{NuevoNombre}', descripcion = '{NuevaDescripcion}' 
-            WHERE  id = {PoderElegido[3]}"""
-            self.cursor.execute(Modificacion)
-            print("Se han cambiado los valores Exitosamente")
+        if bool(ListadoPoder):
+            Elección = int(input("Seleccione (Numero) que poder desea modificar: ")) - 1
+            PoderElegido = ListadoPoder[Elección]
+            print(f"""Se ha seleccionado el {PoderElegido[0]} de la Raza {PoderElegido[2]} \nla cual posee la siguiente descripción:\n{PoderElegido[1]}""")
+            Modificar = int(input("""¿Qué desea modificar del poder en cuestion
+                1.- Su nombre
+                2.- Su Descripción
+                3.- Ambas
+                """))
+            if Modificar == 1:
+                NuevoNombre = input("Ingrese el nuevo nombre de su poder: ")
+                Modificacion = f"""UPDATE poder 
+                set nombre = '{NuevoNombre}' 
+                WHERE  id = {PoderElegido[3]}"""
+                self.cursor.execute(Modificacion)
+                print("Se ha cambiado el Nombre Exitosamente")
+            elif Modificar == 2:
+                NuevaDescripcion = input("Ingrese la nueva descripcion de su poder: ")
+                Modificacion = f"""UPDATE poder 
+                set descripcion = '{NuevaDescripcion}' 
+                WHERE  id = {PoderElegido[3]}"""
+                self.cursor.execute(Modificacion)
+                print("Se ha cambiado la descripcion Exitosamente")
+            elif Modificar == 3:
+                NuevoNombre = input("Ingrese el nuevo nombre de su poder: ")
+                NuevaDescripcion = input("Ingrese la nueva descripcion de su poder: ")
+                Modificacion = f"""UPDATE poder
+                set nombre = '{NuevoNombre}', descripcion = '{NuevaDescripcion}' 
+                WHERE  id = {PoderElegido[3]}"""
+                self.cursor.execute(Modificacion)
+                print("Se han cambiado los valores Exitosamente")
+        else:
+            return
         
     def EliminarPoder(self):
         ListadoPoder = self.ListarPoderes()
-        Elección = int(input("Seleccione (Numero) que poder desea eliminar: ")) - 1
-        PoderElegido = ListadoPoder[Elección]
-        PoderEnuso = f"""Select poder_personaje.fk_id_poder 
-        FROM poder_personaje
-        WHERE poder_personaje.fk_id_poder = {PoderElegido[3]}
-        """
-        self.cursor.execute(PoderEnuso)
-        datos = self.cursor.fetchone()
-        if bool(datos):
-            print("El poder que desea eliminar se esta utilizando")
-            return
+        if bool(ListadoPoder):
+            Elección = int(input("Seleccione (Numero) que poder desea eliminar: ")) - 1
+            PoderElegido = ListadoPoder[Elección]
+            PoderEnuso = f"""Select poder_personaje.fk_id_poder 
+            FROM poder_personaje
+            WHERE poder_personaje.fk_id_poder = {PoderElegido[3]}
+            """
+            self.cursor.execute(PoderEnuso)
+            datos = self.cursor.fetchone()
+            if bool(datos):
+                print("El poder que desea eliminar se esta utilizando")
+                return
+            else:
+                BorrarPoder= f"""DELETE FROM poder 
+                WHERE poder.id = {PoderElegido[3]}"""
+                self.cursor.execute(BorrarPoder)
+                print("Se ha eliminado el poder exitosamente")
         else:
-            BorrarPoder= f"""DELETE FROM poder 
-            WHERE poder.id = {PoderElegido[3]}"""
-            self.cursor.execute(BorrarPoder)
-            print("Se ha eliminado el poder exitosamente")
+            return
         
     def AgregarHabilidad(self):
         Nombre = input("Ingrese el nombre de la nueva habilidad ")
@@ -200,53 +213,59 @@ class GameMaster(Usuario):
     
     def EditarHabilidad(self):
         ListadoHabilidades = self.ListarHabilidades()
-        Elección = int(input("Seleccione (Numero) que habilidad desea modificar: ")) - 1
-        HabilidadElegida = ListadoHabilidades[Elección]
-        print(f"""Se ha seleccionado el {HabilidadElegida[0]} de la Raza {HabilidadElegida[2]} \nla cual posee la siguiente descripción:\n{HabilidadElegida[1]}""")
-        Modificar = int(input("""¿Qué desea modificar de la habilidad en cuestion
-              1.- Su nombre
-              2.- Su Descripción
-              3.- Ambas
-              """))
-        if Modificar == 1:
-            NuevoNombre = input("Ingrese el nuevo nombre de su habilidad: ")
-            Modificacion = f"""UPDATE habilidad 
-            set nombre = '{NuevoNombre}' 
-            WHERE  id = {HabilidadElegida[3]}"""
-            self.cursor.execute(Modificacion)
-        elif Modificar == 2:
-            NuevaDescripcion = input("Ingrese la nueva descripcion de su habilidad: ")
-            Modificacion = f"""UPDATE habilidad 
-            set descripcion = '{NuevaDescripcion}' 
-            WHERE  id = {HabilidadElegida[3]}"""
-            self.cursor.execute(Modificacion)
-        elif Modificar == 3:
-            NuevoNombre = input("Ingrese el nuevo nombre de su habilidad: ")
-            NuevaDescripcion = input("Ingrese la nueva descripcion de su habilidad: ")
-            Modificacion = f"""UPDATE habilidad
-            set nombre = '{NuevoNombre}', descripcion = '{NuevaDescripcion}' 
-            WHERE  id = {HabilidadElegida[3]}"""
-            self.cursor.execute(Modificacion)
-        print("Se han modificado la habilidad exitosamente")
-    
+        if bool(ListadoHabilidades):
+            Elección = int(input("Seleccione (Numero) que habilidad desea modificar: ")) - 1
+            HabilidadElegida = ListadoHabilidades[Elección]
+            print(f"""Se ha seleccionado el {HabilidadElegida[0]} de la Raza {HabilidadElegida[2]} \nla cual posee la siguiente descripción:\n{HabilidadElegida[1]}""")
+            Modificar = int(input("""¿Qué desea modificar de la habilidad en cuestion
+                1.- Su nombre
+                2.- Su Descripción
+                3.- Ambas
+                """))
+            if Modificar == 1:
+                NuevoNombre = input("Ingrese el nuevo nombre de su habilidad: ")
+                Modificacion = f"""UPDATE habilidad 
+                set nombre = '{NuevoNombre}' 
+                WHERE  id = {HabilidadElegida[3]}"""
+                self.cursor.execute(Modificacion)
+            elif Modificar == 2:
+                NuevaDescripcion = input("Ingrese la nueva descripcion de su habilidad: ")
+                Modificacion = f"""UPDATE habilidad 
+                set descripcion = '{NuevaDescripcion}' 
+                WHERE  id = {HabilidadElegida[3]}"""
+                self.cursor.execute(Modificacion)
+            elif Modificar == 3:
+                NuevoNombre = input("Ingrese el nuevo nombre de su habilidad: ")
+                NuevaDescripcion = input("Ingrese la nueva descripcion de su habilidad: ")
+                Modificacion = f"""UPDATE habilidad
+                set nombre = '{NuevoNombre}', descripcion = '{NuevaDescripcion}' 
+                WHERE  id = {HabilidadElegida[3]}"""
+                self.cursor.execute(Modificacion)
+            print("Se han modificado la habilidad exitosamente")
+        else:
+            return
+        
     def EliminarHabilidad(self):
         ListadoHabilidad = self.ListarHabilidades()
-        Elección = int(input("Seleccione (Numero) que habilidad desea eliminar: ")) - 1
-        HabilidadElegida = ListadoHabilidad[Elección]
-        HabilidadenUso = f"""Select habilidad_personaje.fk_id_habilidad 
-        FROM habilidad_personaje
-        WHERE habilidad_personaje.fk_id_habilidad = {HabilidadElegida[3]}
-        """
-        self.cursor.execute(HabilidadenUso)
-        datos = self.cursor.fetchone()
-        if bool(datos):
-            print("La habilidad que desea eliminar se esta utilizando")
-            return
+        if bool(ListadoHabilidad): 
+            Elección = int(input("Seleccione (Numero) que habilidad desea eliminar: ")) - 1
+            HabilidadElegida = ListadoHabilidad[Elección]
+            HabilidadenUso = f"""Select habilidad_personaje.fk_id_habilidad 
+            FROM habilidad_personaje
+            WHERE habilidad_personaje.fk_id_habilidad = {HabilidadElegida[3]}
+            """
+            self.cursor.execute(HabilidadenUso)
+            datos = self.cursor.fetchone()
+            if bool(datos):
+                print("La habilidad que desea eliminar se esta utilizando")
+                return
+            else:
+                BorrarHabilidad= f"""DELETE FROM habilidad 
+                WHERE habilidad.id = {HabilidadElegida[3]}"""
+                self.cursor.execute(BorrarHabilidad)
+                print("Se ha eliminado la habilidad exitosamente")
         else:
-            BorrarHabilidad= f"""DELETE FROM habilidad 
-            WHERE habilidad.id = {HabilidadElegida[3]}"""
-            self.cursor.execute(BorrarHabilidad)
-            print("Se ha eliminado la habilidad exitosamente")
+            return
     
     def AgregarRaza(self):
         Nombre = input("Ingrese el nombre de su nueva Raza: ")
@@ -257,6 +276,8 @@ class GameMaster(Usuario):
     
     def EliminarRaza(self):
         ListadoRaza = self.ListarRazas()
+        if ListadoRaza == False:
+            return
         Elección = int(input("Seleccione (Numero) que raza desea eliminar: ")) - 1
         RazaElegida = ListadoRaza[Elección]
         RazaenUso = f"""Select personaje.fk_id_raza 
@@ -273,28 +294,7 @@ class GameMaster(Usuario):
             self.cursor.execute(BorrarRaza)
             print("Se ha eliminado la raza exitosamente")
         
-    def VerPersonajesPartida(self):
-        PartidasExistentes = self.ListarPartidas()
-        Eleccion = int(input("Seleccione de que partida (Numero) Desea ver los personajes: ")) -1
-        PartidaSeleccionada = int(PartidasExistentes[Eleccion][1])
-        Personajes = f"""select personaje.id, personaje.nombre, personaje.nivel, raza.nombre, estado.nombre
-        from personaje
-        inner join personaje_partida ON personaje_partida.fk_id_personaje = personaje.id
-        inner join raza ON personaje.fk_id_raza = raza.id
-        inner join estado ON personaje.fk_id_estado = estado.id
-        where personaje_partida.fk_id_partida = {PartidaSeleccionada}
-        ORDER BY personaje.id      
-        """
-        self.cursor.execute(Personajes)
-        PersonajesEnPartida = self.cursor.fetchall()
-        if not bool(PersonajesEnPartida):
-            print("No hay personajes asociados a esta partida")
-            return bool(PersonajesEnPartida)
-        print("Los personajes asociados esta partida son: ")
-        for indice, i in enumerate(PersonajesEnPartida):
-            print(f"{indice+1}.- {i[1]}  Nivel: {i[2]} - {i[3]}")
-        return PersonajesEnPartida
-    
+        
     def MenuCrud (self, Opcion):
         if Opcion == 1:
             Eleccion = int(input("""¿Qué desea realizar con las razas? 
@@ -352,6 +352,32 @@ class GameMaster(Usuario):
                 self.EditarEquipamiento()
             elif Eleccion == 3:
                 self.EliminarEquipamiento()
+        
+        
+        
+    def VerPersonajesPartida(self):
+        PartidasExistentes = self.ListarPartidas()
+        Eleccion = int(input("Seleccione de que partida (Numero) Desea ver los personajes: ")) -1
+        PartidaSeleccionada = int(PartidasExistentes[Eleccion][1])
+        Personajes = f"""select personaje.id, personaje.nombre, personaje.nivel, raza.nombre, estado.nombre
+        from personaje
+        inner join personaje_partida ON personaje_partida.fk_id_personaje = personaje.id
+        inner join raza ON personaje.fk_id_raza = raza.id
+        inner join estado ON personaje.fk_id_estado = estado.id
+        where personaje_partida.fk_id_partida = {PartidaSeleccionada}
+        ORDER BY personaje.id      
+        """
+        self.cursor.execute(Personajes)
+        PersonajesEnPartida = self.cursor.fetchall()
+        if bool(PersonajesEnPartida):
+            print("Los personajes asociados esta partida son: ")
+            for indice, i in enumerate(PersonajesEnPartida):
+                print(f"{indice+1}.- {i[1]}  Nivel: {i[2]} - {i[3]}")
+            return PersonajesEnPartida
+        else:        
+            print("No hay personajes asociados a esta partida")
+            return False
+    
                 
     def ListarPoderesPersonaje(self):
         PersonajesEnPartida = self.VerPersonajesPartida()
@@ -421,7 +447,7 @@ class GameMaster(Usuario):
         else:
             print("Este personaje no tiene equipamientos asociados")
 
-            return bool(ListaEquipamientosPersonaje), SeleccionPersonaje,
+            return bool(ListaEquipamientosPersonaje), SeleccionPersonaje
 
     def AgregarHabilidadApersonaje(self):
         pass

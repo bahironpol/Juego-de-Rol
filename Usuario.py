@@ -19,10 +19,14 @@ class Usuario:
             ORDER BY id"""
         self.cursor.execute(query)
         listaHabilidades = self.cursor.fetchall()
-        print("    Habilidad - Descripcion - Raza")
-        for indice, i in enumerate(listaHabilidades):
-            print(f"{indice+1}.- {i[0]} - {i[1]} - {i[2]}")
-        return listaHabilidades
+        if bool(listaHabilidades):
+            print("    Habilidad - Descripcion - Raza")
+            for indice, i in enumerate(listaHabilidades):
+                print(f"{indice+1}.- {i[0]} - {i[1]} - {i[2]}")
+            return listaHabilidades
+        else:
+            print("No hay habilidades en el sistema")
+            return False
 
     def ListarPoderes(self, id=False):
         if bool(id):
@@ -40,10 +44,14 @@ class Usuario:
             """
         self.cursor.execute(query)
         listaPoderes = self.cursor.fetchall()
-        print("    Poder - Descripcion - Raza")
-        for indice, i in enumerate(listaPoderes):
-            print(f"{indice+1}.- {i[0]} - {i[1]} - {i[2]}")
-        return listaPoderes
+        if bool(listaPoderes):
+            print("    Poder - Descripcion - Raza")
+            for indice, i in enumerate(listaPoderes):
+                print(f"{indice+1}.- {i[0]} - {i[1]} - {i[2]}")
+            return listaPoderes
+        else:
+            print("No hay poderes en el sistema")
+            return False
 
     def ListarEquipamiento(self):
         query = f"""SELECT equipamiento.nombre, equipamiento.id 
@@ -51,9 +59,13 @@ class Usuario:
         ORDER BY id"""
         self.cursor.execute(query)
         listaEquipamiento = self.cursor.fetchall()
-        for indice, i in enumerate(listaEquipamiento) :
-            print(f"{indice+1}.- {i[0]} ")
-        return listaEquipamiento
+        if bool(listaEquipamiento):       
+            for indice, i in enumerate(listaEquipamiento) :
+                print(f"{indice+1}.- {i[0]} ")
+            return listaEquipamiento
+        else: 
+            print("No hay equipamientos en el sistema")
+            return False
 
     def ListarEstado(self):
         estados = f"""SELECT estado.nombre, estado.id, estado.efecto 
@@ -71,9 +83,13 @@ class Usuario:
         ORDER BY id"""
         self.cursor.execute(query)
         listaRazas = self.cursor.fetchall()
-        for indice, i in enumerate(listaRazas):
-            print(f"{indice+1}.- {i[0]} ")
-        return listaRazas
+        if bool(listaRazas):
+            for indice, i in enumerate(listaRazas):
+                print(f"{indice+1}.- {i[0]} ")
+            return listaRazas
+        else:
+            print("No hay razas disponibles")
+            return False
 
     def ListarPartidas(self):
         query = f"""SELECT partida.nombre, partida.id 
@@ -81,6 +97,10 @@ class Usuario:
         ORDER BY id"""
         self.cursor.execute(query)
         listaPartidas = self.cursor.fetchall()
-        for indice, i in enumerate(listaPartidas):
-            print(f"{indice+1}.- {i[0]} ")
-        return listaPartidas
+        if bool(listaPartidas):
+            for indice, i in enumerate(listaPartidas):
+                print(f"{indice+1}.- {i[0]} ")
+            return listaPartidas
+        else:
+            print("No hay habilidades en el sistema")
+            return

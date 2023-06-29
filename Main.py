@@ -18,14 +18,16 @@ if Accion == '1':
         print("No deje campos vacios")
         Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
-    
+        Nombre.lower()
+        Contraseña.lower()
+        
     UsuarioExistente = Login(f'{Nombre}', f'{Contraseña}')
     
     while UsuarioExistente[0] == False:
         print("Las credenciales proveidas no son validas")
         Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
-        UsuarioExistente = Login(f'{Nombre}', f'{Contraseña}')
+        UsuarioExistente = Login(f'{Nombre.lower()}', f'{Contraseña.lower()}')
     else:
         print("Bienvenido al sistema")
         
@@ -84,7 +86,9 @@ elif Accion == '2':
         while ValidarExistencia(Nombre, Correo) != True:
             print("Estas credenciales ya se encuentran en uso por favor utilice otras")
             Nombre = input("Reingrese su nombre ")
-            Correo = input("Reingrese su Correo ")
+            Correo = input("Reingrese su Correo ")    
+            Nombre.lower()
+            Correo.lower()
         break
     
     Rol = ''

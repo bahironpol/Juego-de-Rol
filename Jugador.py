@@ -10,9 +10,9 @@ class Jugador(Usuario):
         Nombre = input("Ingrese el nombre de su personaje: ")
         ListadoRaza = self.ListarRazas()
         SeleccionRaza = int(input("Seleccione la raza (numero) que desea darle a su personaje: ")) -1
-        EleccionRaza = ListadoRaza[SeleccionRaza]
+        EleccionRaza = ListadoRaza[SeleccionRaza][0]
         CrearPersonaje = f"""INSERT INTO personaje (nombre, nivel, fk_id_raza, fk_id_usuario, fk_id_estado)
-        values ('{Nombre}', 1, {EleccionRaza[1]}, {self.id}, 1) RETURNING id"""
+        values ('{Nombre}', 1, {EleccionRaza}, {self.id}, 1) RETURNING id"""
         self.cursor.execute(CrearPersonaje)
         id_pj_creado = self.cursor.fetchone()[0]
         self.AsignarEquipamiento(id_pj_creado)
@@ -22,7 +22,7 @@ class Jugador(Usuario):
         print("Se ha creado su personaje exitosamente")
     
     def VerPersonajes(self):
-        query = f"""select personaje.nombre, raza.nombre, personaje.nivel, estado.nombre, personaje.id
+        query = f"""select personaje.id, personaje.nombre, raza.nombre, personaje.nivel, estado.nombre
         from personaje
         left join raza on personaje.fk_id_raza = raza.id
         left join estado on personaje.fk_id_estado = estado.id
@@ -35,7 +35,7 @@ class Jugador(Usuario):
         if HayPersonajes:
             print("Estos son sus personajes")
             for indice, i in enumerate(listaPersonaje):
-                print(f"{indice+1}.- {i[0]} -  Nivel: {i[1]} - {i[2]} - {i[3]}")
+                print(f"{indice+1}.- {i[1]} -  {i[2]} - Nivel: {i[3]} - {i[4]}")
             return listaPersonaje
         else:
             print("Usted no posee personajes")
@@ -43,27 +43,27 @@ class Jugador(Usuario):
         
     def AsignarEquipamiento(self, id):
         ListadoEquipamiento = self.ListarEquipamiento()
-        Eleccion = int(input("Seleccione el equipamiento (numero) que desea equiparle a su personaje: ")) -1  
-        EleccionEquipamiento = ListadoEquipamiento[Eleccion]
+        EleccionEquipamiento = int(input("Seleccione el equipamiento (numero) que desea equiparle a su personaje: ")) -1  
+        SeleccionEquipamiento = ListadoEquipamiento[EleccionEquipamiento][0]
         EquiparPersonaje = f"""INSERT INTO equipamiento_personaje (fk_id_equipamiento, fk_id_personaje)
-        VALUES ({EleccionEquipamiento[1]}, {id})"""
+        VALUES ({SeleccionEquipamiento}, {id})"""
         self.cursor.execute(EquiparPersonaje)
     
     def AsignarPoder(self, id, raza):
-        ListadoPoder = self.ListarPoderes(raza[1])
+        ListadoPoder = self.ListarPoderes(raza)
         Eleccion = int(input("Seleccione el poder (numero) que desea asignarle a su personaje: ")) -1
-        EleccionPoder = ListadoPoder[Eleccion]
+        EleccionPoder = ListadoPoder[Eleccion][0]
         AsociarPoder = f"""INSERT INTO poder_personaje (fk_id_poder, fk_id_personaje)
-        VALUES ({EleccionPoder[3]}, {id})
+        VALUES ({EleccionPoder}, {id})
         """
         self.cursor.execute(AsociarPoder)
     
     def AsignarHabilidad(self,id, raza):
-        ListadoHabilidad = self.ListarHabilidades(raza[1])
+        ListadoHabilidad = self.ListarHabilidades(raza)
         Eleccion = int(input("Seleccione la habilidad (numero) que desea asignarle a su personaje: ")) -1
-        EleccionPoder = ListadoHabilidad[Eleccion]
+        EleccionHabilidad = ListadoHabilidad[Eleccion][0]
         AsociarHabilidad = f"""INSERT INTO habilidad_personaje (fk_id_habilidad, fk_id_personaje)
-        VALUES ({EleccionPoder[3]}, {id})
+        VALUES ({EleccionHabilidad}, {id})
         """
         self.cursor.execute(AsociarHabilidad)
     
@@ -75,43 +75,44 @@ class Jugador(Usuario):
             return
         EleccionPersonaje = int(input("Seleccione el personaje (Numero) que desea equipar: ")) -1
         SeleccionPersonaje = ListadoPersonajes[EleccionPersonaje]
-        if SeleccionPersonaje[3] == 'Muerto':
+        if SeleccionPersonaje[4] == 'Muerto':
             print("No se pueden equipar personajes muertos")
             return
-        EquipamientosEquipados = f"""SELECT equipamiento.nombre, equipamiento.id
+        EquipamientosEquipados = f"""SELECT equipamiento.id, equipamiento.nombre
         FROM equipamiento_personaje
         INNER JOIN equipamiento on equipamiento_personaje.fk_id_equipamiento = equipamiento.id
-        WHERE equipamiento_personaje.fk_id_personaje = {SeleccionPersonaje[4]}
+        WHERE equipamiento_personaje.fk_id_personaje = {SeleccionPersonaje[0]}
         ORDER BY id
         """
         self.cursor.execute(EquipamientosEquipados)
         ListadoEquipados = self.cursor.fetchall()
         print("Estos son los equipamientos asociados a su personaje: ")
         for indice, i in enumerate(ListadoEquipados):
-            print(f"{indice+1}.- {i[0]}")
+            print(f"{indice+1}.- {i[1]}")
         EleccionEquipados = int(input("Seleccione (Numero) que equipamiento desea Modificar")) -1
-        EquipadoSeleccionado = ListadoEquipados[EleccionEquipados]
+        EquipadoSeleccionado = ListadoEquipados[EleccionEquipados][0]
         ListadoEquipamientos = self.ListarEquipamiento()
         EleccionEquipamiento = int(input("Seleccione el equipamiento (Numero) nuevo por el cual reemplazara el anterior: ")) -1
-        EquipamientoSeleccionado = ListadoEquipamientos[EleccionEquipamiento]
+        EquipamientoSeleccionado = ListadoEquipamientos[EleccionEquipamiento][0]
         Reemplazo = f""" equipamiento_personaje
-        SET fk_id_equipamiento = {EquipamientoSeleccionado[1]}
-        WHERE personaje_equipamiento.id = {EquipadoSeleccionado[1]}
+        SET fk_id_equipamiento = {EquipamientoSeleccionado}
+        WHERE equipamiento_personaje.id = {EquipadoSeleccionado}
         """
         self.cursor.execute(Reemplazo)
+        print("Equipamiento cambiado exitosamente")
         
     def asociarPJaPartida(self):
         ListadoPersonajes = self.VerPersonajes()
         if ListadoPersonajes == False:
             print("Parece que no tiene personajes para asociar a partidas")
             return
-        EleccionPersonaje = int(input("¿A que personaje desea asociar a una partida?"))
-        SeleccionPersonaje = ListadoPersonajes[EleccionPersonaje-1]
+        EleccionPersonaje = int(input("¿A que personaje desea asociar a una partida?")) -1
+        SeleccionPersonaje = ListadoPersonajes[EleccionPersonaje][0]
         ListadoPartidas = self.ListarPartidas()
-        EleccionPartida = int(input("¿A que partida quiere asociar a su personaje?"))
-        SeleccionPartida = ListadoPartidas[EleccionPartida-1]
+        EleccionPartida = int(input("¿A que partida quiere asociar a su personaje?")) -1
+        SeleccionPartida = ListadoPartidas[EleccionPartida][0]
         Asociar = f""" INSERT INTO personaje_partida (fk_id_personaje, fk_id_partida) 
-        VALUES ({SeleccionPersonaje[4]}, {SeleccionPartida[1]})"""
+        VALUES ({SeleccionPersonaje}, {SeleccionPartida})"""
         self.cursor.execute(Asociar)
         print("Asociado Correctamente")
         
@@ -124,4 +125,3 @@ class Jugador(Usuario):
             self.asociarPJaPartida()
         elif Opcion == 4:
             self.ModificarEquipamiento()
-            

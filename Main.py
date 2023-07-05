@@ -1,4 +1,4 @@
-from LoginRegister import Login, Registrarse,ValidarNombre, ValidarContraseña, ValidarCorreo, ValidarExistencia
+from LoginRegister import Login, Registrarse,ValidarNombre, ValidarContraseña, ValidarCorreo, ValidarExistencia, MenuGM
 from Jugador import Jugador
 from GameMaster import GameMaster
 
@@ -18,10 +18,7 @@ if Accion == '1':
         print("No deje campos vacios")
         Nombre = input("Ingrese su nombre de usuario: ")
         Contraseña = input("Ingrese su contraseña: ")
-        Nombre.lower()
-        Contraseña.lower()
-        
-    UsuarioExistente = Login(f'{Nombre}', f'{Contraseña}')
+    UsuarioExistente = Login(f'{Nombre.lower()}', f'{Contraseña.lower()}')
     
     while UsuarioExistente[0] == False:
         print("Las credenciales proveidas no son validas")
@@ -60,8 +57,9 @@ if Accion == '1':
                                  3.- Poderes: Crear, Modificar o Eliminar Poderes jugables
                                  4.- Estados : Crear, Modificar o Eliminar estados del sistema
                                  5.- Equipamientos: Cree, Modifique o Elimine equipamientos
+                                 6.- Partida: Cree una nueva partida.
                                  """))
-                gamemaster.MenuCrud(Eleccion)
+                MenuGM(gamemaster, Eleccion)
                 Seguir = input("¿Desea continuar usando el menu? Si/No: ")
                 if Seguir.lower() == "no":
                     break
@@ -86,9 +84,9 @@ elif Accion == '2':
         while ValidarExistencia(Nombre, Correo) != True:
             print("Estas credenciales ya se encuentran en uso por favor utilice otras")
             Nombre = input("Reingrese su nombre ")
-            Correo = input("Reingrese su Correo ")    
-            Nombre.lower()
-            Correo.lower()
+            Correo = input("Reingrese su Correo ")
+        Nombre.lower()
+        Correo.lower()
         break
     
     Rol = ''

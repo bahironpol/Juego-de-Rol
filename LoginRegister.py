@@ -46,3 +46,63 @@ def Registrarse(nombre, correo, contraseña, rol):
     INSERT INTO usuario (nombre, correo, contraseña, rol) values
     ('{nombre}', '{correo}','{contraseña}', '{rol}')"""
     cursor.execute(InsertarUsuario)
+
+def MenuGM (GM, Opcion):
+    if Opcion == 1:
+        Eleccion = int(input("""¿Qué desea realizar con las razas? 
+                        1.- Agregar una raza
+                        2.- Eliminar una raza"""))
+        if Eleccion == 1:
+            GM.AgregarRaza()
+        elif Eleccion == 2:
+            GM.EliminarRaza()
+            
+    elif Opcion == 2:
+        Eleccion = int(input("""¿Qué desea realizar con las habilidades? 
+                        1.- Agregar una habilidad
+                        2.- Modificar una habilidad
+                        3.- Eliminar una habilidad"""))
+        if Eleccion == 1:
+            GM.AgregarHabilidad()
+        elif Eleccion == 2:
+            GM.EditarHabilidad()
+        elif Eleccion == 3:
+            GM.EliminarHabilidad()
+            
+    elif Opcion == 3:
+        Eleccion = int(input("""¿Qué desea realizar con los poderes? 
+                        1.- Agregar un Poder
+                        2.- Modificar un poder
+                        3.- Eliminar un poder"""))
+        if Eleccion == 1:
+            GM.AgregarPoder()
+        elif Eleccion == 2:
+            GM.EditarPoder()
+        elif Eleccion == 3:
+            GM.EliminarPoder()
+            
+    elif Opcion == 4:
+        Eleccion = int(input("""¿Qué desea realizar con los estados? 
+                        1.- Agregar un estado
+                        2.- Modificar un estado
+                        3.- Eliminar un estado"""))
+        if Eleccion == 1:
+            GM.AgregarEstado()
+        elif Eleccion == 2:
+            GM.EditarEstado()
+        elif Eleccion == 3:
+            GM.EliminarEstado()
+            
+    elif Opcion == 5:
+        Eleccion = int(input("""¿Qué desea realizar con los equipamientos? 
+                        1.- Agregar un equipamiento
+                        2.- Modificar un equipamiento
+                        3.- Eliminar un equipamiento"""))
+        if Eleccion == 1:
+            GM.AgregarEquipamiento()
+        elif Eleccion == 2:
+            GM.EditarEquipamiento()
+        elif Eleccion == 3:
+            GM.EliminarEquipamiento()
+    elif Opcion == 6:
+        GM.crearPartida()

@@ -1,6 +1,6 @@
-from LoginRegister import Login, Registrarse,ValidarNombre, ValidarContraseña, ValidarCorreo, ValidarExistencia, MenuGM
-from Jugador import Jugador
-from GameMaster import GameMaster
+from LoginRegister import Login, Registrarse,ValidarNombre, ValidarContraseña, ValidarCorreo, ValidarExistencia
+from Jugador import Jugador, MenuJugador
+from GameMaster import GameMaster, MenuGM
 
 print("Bienvenido al sistema ¿Qué acción desea realizar?")
 Accion = input("""
@@ -40,7 +40,7 @@ if Accion == '1':
                                  3.- Asociar Personaje a una partida: Asocie a alguno de sus personajes a una partida
                                  4.- Reequipar a un personaje: Seleccione uno de sus personajes y cambiele el equipamiento
                                  """))
-                jugador.MenuOpciones(Eleccion)
+                MenuJugador(jugador, Eleccion)
                 Seguir = input("¿Desea continuar usando el menu? Si/No: ")
                 if Seguir.lower() == "no":
                     break

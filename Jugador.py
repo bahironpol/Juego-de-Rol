@@ -116,12 +116,12 @@ class Jugador(Usuario):
         self.cursor.execute(Asociar)
         print("Asociado Correctamente")
         
-    def MenuOpciones(self, Opcion):
-        if Opcion == 1:
-            self.CrearPersonaje()
-        elif Opcion == 2:
-            self.VerPersonajes()
-        elif Opcion == 3:
-            self.asociarPJaPartida()
-        elif Opcion == 4:
-            self.ModificarEquipamiento()
+def MenuJugador(jugador, Opcion):
+    if Opcion == 1:
+        jugador.CrearPersonaje()
+    elif Opcion == 2:
+        jugador.VerPersonajes()
+    elif Opcion == 3:
+        jugador.asociarPJaPartida()
+    elif Opcion == 4:
+        jugador.ModificarEquipamiento()

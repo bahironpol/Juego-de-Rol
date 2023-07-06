@@ -491,32 +491,91 @@ class GameMaster(Usuario):
         self.cursor.execute(EliminacionEquipamientoQuery)
         print("Se ha eliminado el equipamiento correctamente")
             
-    # def cambiarEstadoPersonaje(self):
-    #     Personajes = self.VerPersonajesPartida()
-    #     EleccionPersonaje = int(input("Elija (Numero) A que personaje desea de cambiarle el estado: ")) -1
-    #     PersonajeSeleccionado = Personajes[EleccionPersonaje]
-    #     print(f"Estado actual del personaje seleccionado: {PersonajeSeleccionado[5]}")
-    #     Estados = self.ListarEstado()
-    #     EleccionEstado = int(input("Elija (Numero) el nuevo estado que quiere darle al personaje : ")) -1
-    #     EstadoSeleccionado = Estados[EleccionEstado][0]
-    #     CambiarEstadoPJQuery = f"""UPDATE personaje
-    #     set fk_id_estado = {EstadoSeleccionado}
-    #     where id = {PersonajeSeleccionado[0]}
-    #     """
-    #     self.cursor.execute(CambiarEstadoPJQuery)
-    #     print("Estado Cambiado exitosamente")
+    def cambiarEstadoPersonaje(self):
+        Personajes = self.VerPersonajesPartida()
+        EleccionPersonaje = int(input("Elija (Numero) A que personaje desea de cambiarle el estado: ")) -1
+        PersonajeSeleccionado = Personajes[EleccionPersonaje]
+        print(f"Estado actual del personaje seleccionado: {PersonajeSeleccionado[5]}")
+        Estados = self.ListarEstado()
+        EleccionEstado = int(input("Elija (Numero) el nuevo estado que quiere darle al personaje : ")) -1
+        EstadoSeleccionado = Estados[EleccionEstado][0]
+        CambiarEstadoPJQuery = f"""UPDATE personaje
+        set fk_id_estado = {EstadoSeleccionado}
+        where id = {PersonajeSeleccionado[0]}
+        """
+        self.cursor.execute(CambiarEstadoPJQuery)
+        print("Estado Cambiado exitosamente")
     
-    # def SubirNiveldePersonaje(self):
-    #     Personajes = self.VerPersonajesPartida()
-    #     EleccionPersonaje = int(input("Elija (Numero) A que personaje desea de incrementarle el nivel: ")) -1
-    #     PersonajeSeleccionado = Personajes[EleccionPersonaje]
-    #     Nivel = int(input("¿Cuantos niveles desea incrementarle al personaje?"))
-    #     while Nivel < 0:
-    #         Nivel = int(input("No se pueden disminuir niveles por favor ingrese un valor valido: "))
-    #     NuevoNivel = PersonajeSeleccionado[2] + Nivel
-    #     IncrementoDeNivelQuery = f"""UPDATE personaje
-    #         set nivel = '{NuevoNivel}' 
-    #         WHERE  id = {PersonajeSeleccionado[0]}"""
-    #     self.cursor.execute(IncrementoDeNivelQuery)
-    #     print("Se ha aumentado el nivel correctamente")
-    
+    def SubirNiveldePersonaje(self):
+        Personajes = self.VerPersonajesPartida()
+        EleccionPersonaje = int(input("Elija (Numero) A que personaje desea de incrementarle el nivel: ")) -1
+        PersonajeSeleccionado = Personajes[EleccionPersonaje]
+        Nivel = int(input("¿Cuantos niveles desea incrementarle al personaje?"))
+        while Nivel < 0:
+            Nivel = int(input("No se pueden disminuir niveles por favor ingrese un valor valido: "))
+        NuevoNivel = PersonajeSeleccionado[2] + Nivel
+        IncrementoDeNivelQuery = f"""UPDATE personaje
+            set nivel = '{NuevoNivel}' 
+            WHERE  id = {PersonajeSeleccionado[0]}"""
+        self.cursor.execute(IncrementoDeNivelQuery)
+        print("Se ha aumentado el nivel correctamente")
+
+def MenuGM (GM, Opcion):
+    if Opcion == 1:
+        Eleccion = int(input("""¿Qué desea realizar con las razas? 
+                        1.- Agregar una raza
+                        2.- Eliminar una raza"""))
+        if Eleccion == 1:
+            GM.AgregarRaza()
+        elif Eleccion == 2:
+            GM.EliminarRaza()
+            
+    elif Opcion == 2:
+        Eleccion = int(input("""¿Qué desea realizar con las habilidades? 
+                        1.- Agregar una habilidad
+                        2.- Modificar una habilidad
+                        3.- Eliminar una habilidad"""))
+        if Eleccion == 1:
+            GM.AgregarHabilidad()
+        elif Eleccion == 2:
+            GM.EditarHabilidad()
+        elif Eleccion == 3:
+            GM.EliminarHabilidad()
+            
+    elif Opcion == 3:
+        Eleccion = int(input("""¿Qué desea realizar con los poderes? 
+                        1.- Agregar un Poder
+                        2.- Modificar un poder
+                        3.- Eliminar un poder"""))
+        if Eleccion == 1:
+            GM.AgregarPoder()
+        elif Eleccion == 2:
+            GM.EditarPoder()
+        elif Eleccion == 3:
+            GM.EliminarPoder()
+            
+    elif Opcion == 4:
+        Eleccion = int(input("""¿Qué desea realizar con los estados? 
+                        1.- Agregar un estado
+                        2.- Modificar un estado
+                        3.- Eliminar un estado"""))
+        if Eleccion == 1:
+            GM.AgregarEstado()
+        elif Eleccion == 2:
+            GM.EditarEstado()
+        elif Eleccion == 3:
+            GM.EliminarEstado()
+            
+    elif Opcion == 5:
+        Eleccion = int(input("""¿Qué desea realizar con los equipamientos? 
+                        1.- Agregar un equipamiento
+                        2.- Modificar un equipamiento
+                        3.- Eliminar un equipamiento"""))
+        if Eleccion == 1:
+            GM.AgregarEquipamiento()
+        elif Eleccion == 2:
+            GM.EditarEquipamiento()
+        elif Eleccion == 3:
+            GM.EliminarEquipamiento()
+    elif Opcion == 6:
+        GM.crearPartida()

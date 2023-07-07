@@ -1,16 +1,16 @@
 from LoginRegister import Login, Registrarse,ValidarNombre, ValidarContraseña, ValidarCorreo, ValidarExistencia
 from Jugador import Jugador, MenuJugador
-from GameMaster import GameMaster, MenuGM
+from GameMaster import GameMaster, MenuCRUDElementos, MenuFichasPersonaje
 
 print("Bienvenido al sistema ¿Qué acción desea realizar?")
-Accion = input("""
+Accion = int(input("""
                1.- Logearse
                2.- Registrarse
-               """)
+               """))
 
-while Accion not in ['1', '2']:
+while Accion not in [1, 2]:
     Accion = input("La opción es invalida por favor ingrese un opcion valida ")
-if Accion == '1':
+if Accion == 1:
     print("Bienvenido a la pantalla de ingreso de usuarios por favor ingrese los datos que le solicitaremos ")
     Nombre = input("Ingrese su nombre de usuario: ")
     Contraseña = input("Ingrese su contraseña: ")
@@ -49,24 +49,47 @@ if Accion == '1':
         case "game master":
             gamemaster = GameMaster(UsuarioExistente[1][1], UsuarioExistente[1][4])
             print(f"Bienvenido {gamemaster.nombre} ({gamemaster.rol})")
-            print("Bienvenido al menu de creacion, Eliminación y modificación de elementos de juego de rol por favor que desea modificar")
-            while True:
-                Eleccion = int(input("""
-                                 1.- Razas: Crear y eliminar razas jugables
-                                 2.- Habilidades: Crear, Modificar o Eliminar Habilidades jugables
-                                 3.- Poderes: Crear, Modificar o Eliminar Poderes jugables
-                                 4.- Estados : Crear, Modificar o Eliminar estados del sistema
-                                 5.- Equipamientos: Cree, Modifique o Elimine equipamientos
-                                 6.- Partida: Cree una nueva partida.
-                                 """))
-                MenuGM(gamemaster, Eleccion)
-                Seguir = input("¿Desea continuar usando el menu? Si/No: ")
-                if Seguir.lower() == "no":
-                    break
-                print("Seleccione otra opcion")
+            EleccionMenu = int(input("¿Qué menu desea utilizar? \n 1.- Menu de fichas de personaje \n 2.- Menu de Modificación de elementos de juego (Razas, Poderes, etc) \n"))
+            
+            while EleccionMenu not in [1, 2]:
+                EleccionMenu = int(input("La elección no fue valida por favor seleccione una opcion valida"))
+            
+            if EleccionMenu == 1:
+                print("Bienvenido al menu de modificación de fichas de personaje por favor seleccione que desea hacer")
+                while True:
+                    Eleccion = int(input("""
+                                            1.- Habilidades: Agregar, Cambiar o Eliminar habilidades de una ficha de personaje
+                                            2.- Poderes: Agregar, Cambiar o Eliminar poderes de una ficha de personaje
+                                            3.- Equipamiento: Agregar o Eliminar equipamiento de una ficha de personaje
+                                            4.- Estado: Cambiar el estado de una ficha de personaje
+                                            5.- Nivel: Aumentar el nivel de una ficha de personaje
+                                            \n
+                                            """))
+                    MenuFichasPersonaje(gamemaster, Eleccion)
+                    Seguir = input("¿Desea continuar usando el menu? Si/No: ")
+                    if Seguir.lower() == "no":
+                        break
+                    print("Seleccione otra opcion")
+            elif EleccionMenu == 2:
+                print("Bienvenido al menu de creacion, Eliminación y modificación de elementos de juego de rol por favor que desea modificar")
+                while True:
+                    Eleccion = int(input("""
+                                        1.- Razas: Crear y eliminar razas jugables
+                                        2.- Habilidades: Crear, Modificar o Eliminar Habilidades jugables
+                                        3.- Poderes: Crear, Modificar o Eliminar Poderes jugables
+                                        4.- Estados : Crear, Modificar o Eliminar estados del sistema
+                                        5.- Equipamientos: Cree, Modifique o Elimine equipamientos
+                                        6.- Partida: Cree una nueva partida.
+                                        \n
+                                        """))
+                    MenuCRUDElementos(gamemaster, Eleccion)
+                    Seguir = input("¿Desea continuar usando el menu? Si/No: ")
+                    if Seguir.lower() == "no":
+                        break
+                    print("Seleccione otra opcion")
             print("Tenga un buen dia")
             
-elif Accion == '2':
+elif Accion == 2:
     print("Bienvenido a la pantalla de registro de usuarios por favor ingrese los datos que le solicitaremos ")
     Nombre = input("Ingrese su nombre de usuario: ")
     Correo = input("Ingrese su correo: ")
@@ -90,12 +113,12 @@ elif Accion == '2':
         break
     
     Rol = ''
-    Opcion = input(f"""
+    Opcion = int(input(f"""
             ¿Con cual de los siguientes roles se desea registrar?
             1.- Jugador
             2.- Game Master
-            """)
-    while Opcion not in ['1','2']:
+            """))
+    while Opcion not in [1,2]:
         Opcion = input("La opción ingresada no es valida por favor seleccione nuevamente ")
     if Opcion == '1':
         Rol = "jugador"

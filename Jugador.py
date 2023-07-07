@@ -78,7 +78,7 @@ class Jugador(Usuario):
         if SeleccionPersonaje[4] == 'Muerto':
             print("No se pueden equipar personajes muertos")
             return
-        EquipamientosEquipados = f"""SELECT equipamiento.id, equipamiento.nombre
+        EquipamientosEquipados = f"""SELECT equipamiento_personaje.id, equipamiento.nombre
         FROM equipamiento_personaje
         INNER JOIN equipamiento on equipamiento_personaje.fk_id_equipamiento = equipamiento.id
         WHERE equipamiento_personaje.fk_id_personaje = {SeleccionPersonaje[0]}
@@ -94,7 +94,7 @@ class Jugador(Usuario):
         ListadoEquipamientos = self.ListarEquipamiento()
         EleccionEquipamiento = int(input("Seleccione el equipamiento (Numero) nuevo por el cual reemplazara el anterior: ")) -1
         EquipamientoSeleccionado = ListadoEquipamientos[EleccionEquipamiento][0]
-        Reemplazo = f""" equipamiento_personaje
+        Reemplazo = f"""UPDATE equipamiento_personaje
         SET fk_id_equipamiento = {EquipamientoSeleccionado}
         WHERE equipamiento_personaje.id = {EquipadoSeleccionado}
         """

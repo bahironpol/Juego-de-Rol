@@ -27,6 +27,7 @@ if Accion == 1:
         UsuarioExistente = Login(f'{Nombre.lower()}', f'{Contraseña.lower()}')
     else:
         print("Bienvenido al sistema")
+        print(UsuarioExistente)
         
     match UsuarioExistente[1][4]:
         case "jugador":
@@ -120,9 +121,9 @@ elif Accion == 2:
             """))
     while Opcion not in [1,2]:
         Opcion = input("La opción ingresada no es valida por favor seleccione nuevamente ")
-    if Opcion == '1':
+    if Opcion == 1:
         Rol = "jugador"
-    elif Opcion == '2':
+    elif Opcion == 2:
         Rol = "game master"
 
     Registrarse(Nombre, Correo, Contraseña, Rol)
